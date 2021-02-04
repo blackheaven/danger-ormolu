@@ -1,0 +1,1 @@
+require "ormolu/plugin"
