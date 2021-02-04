@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Ormolu::VERSION
   spec.authors       = ['Gautier DI FOLCO']
   spec.email         = ['gautier.difolco@gmail.com']
-  spec.description   = %q{A short description of danger-ormolu.}
-  spec.summary       = %q{A longer description of danger-ormolu.}
-  spec.homepage      = 'https://github.com/Gautier DI FOLCO/danger-ormolu'
+  spec.description   = %q{A danger plugin for ormolu}
+  spec.summary       = %q{A danger plugin for the Haskell code formatter ormolu}
+  spec.homepage      = 'https://github.com/blackheaven/danger-ormolu'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)

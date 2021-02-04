@@ -1,33 +1,44 @@
 module Danger
-  # This is your plugin class. Any attributes or methods you expose here will
-  # be available from within your Dangerfile.
+  # @example Ensure the files are correctly formatted
   #
-  # To be published on the Danger plugins site, you will need to have
-  # the public interface documented. Danger uses [YARD](http://yardoc.org/)
-  # for generating documentation from your plugin source, and you can verify
-  # by running `danger plugins lint` or `bundle exec rake spec`.
+  #          ormolu.check files
   #
-  # You should replace these comments with a public description of your library.
-  #
-  # @example Ensure people are well warned about merging on Mondays
-  #
-  #          my_plugin.warn_on_mondays
-  #
-  # @see  Gautier DI FOLCO/danger-ormolu
-  # @tags monday, weekends, time, rattata
+  # @see  blackheaven/danger-ormolu
   #
   class DangerOrmolu < Plugin
 
-    # An attribute that you can read/write from your Dangerfile
+    # Check that the files are correctly formatted
+    # @param files [Array<String>]
     #
-    # @return   [Array<String>]
-    attr_accessor :my_attribute
+    def check(files)
+      files
+        .each { |file|
+          result = `ormolu --mode stdout --check-idempotence "#{file}" | diff "#{file}" -`
+          unless result.empty?
+            extract_diffs(result.lines)
+              .each { |diff|
+                inconsistence(file, diff[:line], diff[:diff])
+              }
+          end
+        }
+    end
 
-    # A method that you can call from your Dangerfile
-    # @return   [Array<String>]
-    #
-    def warn_on_mondays
-      warn 'Trying to merge code on a Monday' if Date.today.wday == 1
+    private
+    def inconsistence(file, line, diff)
+        message = "Style error, fix it through \n\n```haskell\n#{diff}\n``` \n"
+        warn(message, file: file, line: line)
+    end
+
+    def extract_diffs(lines)
+      lines
+        .reverse
+        .slice_when {|l| l =~ /^\d.*/ }
+        .to_a
+        .map(&:reverse)
+        .reverse
+        .map { |chunk|
+        {:line => chunk.first[/^\d+/].to_i, :diff => chunk.flatten}
+        }
     end
   end
 end
