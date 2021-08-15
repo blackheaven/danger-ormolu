@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 module Danger
+  # Lint haskell files against ormolu formatting
+  #
   # @example Ensure the files are correctly formatted
   #
   #          ormolu.check files
   #
   # @see  blackheaven/danger-ormolu
+  # @tags haskell, formatting, ormolu
   #
   class DangerOrmolu < Plugin
     # Check that the files are correctly formatted
     # @param files [Array<String>]
+    # @return [void]
     #
     def check(files)
       files
