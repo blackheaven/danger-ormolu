@@ -15,24 +15,24 @@ module Danger
     # @param files [Array<String>]
     # @return [void]
     #
-    def check(files)
+    def check(files, path: 'ormolu', level: :warn)
       files
         .each do |file|
-          result = `ormolu --mode stdout --check-idempotence "#{file}" | diff "#{file}" -`
+          result = `#{path} --mode stdout --check-idempotence "#{file}" | diff "#{file}" -`
           next if result.empty?
 
           extract_diffs(result.lines)
             .each do |diff|
-              inconsistence(file, diff[:line], diff[:diff])
+              inconsistence(file, diff[:line], diff[:diff], level)
             end
         end
     end
 
     private
 
-    def inconsistence(file, line, diff)
+    def inconsistence(file, line, diff, level)
       message = "Style error, fix it through \n\n```haskell\n#{diff.join}\n``` \n"
-      warn(message, file: file, line: line)
+      send level, message, file: file, line: line
     end
 
     def extract_diffs(lines)
