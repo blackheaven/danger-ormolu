@@ -31,7 +31,7 @@ module Danger
     private
 
     def inconsistence(file, line, diff)
-      message = "Style error, fix it through \n\n```haskell\n#{diff}\n``` \n"
+      message = "Style error, fix it through \n\n```haskell\n#{diff.join}\n``` \n"
       warn(message, file: file, line: line)
     end
 
