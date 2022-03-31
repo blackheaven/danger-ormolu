@@ -15,10 +15,10 @@ module Danger
     # @param files [Array<String>]
     # @return [void]
     #
-    def check(files, path: 'ormolu', level: :warn)
+    def check(files, path: 'ormolu', args: '', level: :warn)
       files
         .each do |file|
-          result = `#{path} --mode stdout --check-idempotence "#{file}" | diff "#{file}" -`
+          result = `#{path} #{args} --mode stdout --check-idempotence "#{file}" | diff "#{file}" -`
           next if result.empty?
 
           extract_diffs(result.lines)
